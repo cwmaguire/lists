@@ -1,0 +1,10 @@
+lists.js is a functional JavaScript library using mostly
+arrays with a lot of Array.slice() to ensure immutability.
+
+I'm used to functional list operations in Erlang and Clojure
+so I copied a bunch of functionality here.
+
+All functions have tests and can be tested with test.js.
+The test.js file looks for all functions in the Window that
+end in "Test", runs them and reports their output to
+a "results" DIV.
