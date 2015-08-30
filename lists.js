@@ -329,11 +329,11 @@ function concat_(arr1, arr2){
   if(arr1.length == 0){
     return arr2;
   }
-  return concat(tl(arr1), cons(arr2, hd(arr1)));
+  return concat_(tl(arr1), cons(arr2, hd(arr1)));
 }
 
 function concatTest(){
-  return equal([1,2,3,4], concat([1,2],[3,4])) &&
+  return equal([1,2,3,4,5,6], concat([1,2,3],[4,5,6])) &&
          equal([1,2], concat([], [1,2])) &&
          equal([1,2], concat([1,2], [])) &&
          equal([], concat([], []));
