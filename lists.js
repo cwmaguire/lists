@@ -91,10 +91,6 @@ function reverseTest(){
          equal([3,2,1], rev);
 }
 
-function concat(arr1, arr2){
-  return arr1.concat(arr2);
-}
-
 function map(fun, arr, maybe_results){
   var results = (maybe_results == undefined ? [] : maybe_results.slice(0));
   var next;
@@ -148,8 +144,10 @@ function seqBy(start, end, step, maybe_sequence){
   }else{
     sequence = maybe_sequence;
   }
-  if(start > end){
+  if((step > 0 && start > end) || (step < 0 && end >= start)){
     return reverse(sequence);
+  }else if(step == 0){
+    return maybe_sequence;
   }
   var next = parseFloat((start + step).toFixed(6));
   return seqBy(next, end, step, cons(sequence, start));
@@ -321,22 +319,33 @@ function apply2Test(){
   return (apply2(f))([1, 1]);
 }
 
-function concat(arr1, arr2){
-  return concat_(reverse(arr1), arr2);
+function apply3(f){
+  return function(p){return f(p[0], p[1], p[2])};
 }
 
-function concat_(arr1, arr2){
-  if(arr1.length == 0){
-    return arr2;
-  }
-  return concat_(tl(arr1), cons(arr2, hd(arr1)));
+function apply3Test(){
+  var f = function(x, y, z){ return x == y && y == z };
+  return (apply3(f))([1, 1, 1]);
+}
+
+function concat(arr1, arr2){
+  return arr1.concat(arr2);
 }
 
 function concatTest(){
-  return equal([1,2,3,4,5,6], concat([1,2,3],[4,5,6])) &&
-         equal([1,2], concat([], [1,2])) &&
-         equal([1,2], concat([1,2], [])) &&
-         equal([], concat([], []));
+  var values_match =
+    equal([1,2,3,4], concat([1,2],[3,4])) &&
+    equal([1,2], concat([], [1,2])) &&
+    equal([1,2], concat([1,2], [])) &&
+    equal([], concat([], []));
+  var arr1 = [1, 2, 3];
+  var arr2 = [4, 5, 6];
+  var arr3 = arr1.concat(arr2);
+  var has_no_side_effects =
+    equal(arr1, [1, 2, 3]) &&
+    equal(arr2, [4, 5, 6]) &&
+    equal(arr3, [1, 2, 3, 4, 5, 6]);
+  return values_match && has_no_side_effects;
 }
 
 function contains(elem, arr){
@@ -365,4 +374,8 @@ function uniqueTest(){
   return equal([1,2,3], unique([1,1,1,2,3,3])) &&
          equal([1,2,3], unique([1,2,3,1,3])) &&
          equal(["a", "b", "c"], unique(["a", "b", "c", "a", "b"]));
+}
+
+function copy(arr){
+  return arr.slice(0);
 }
